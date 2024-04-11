@@ -11,11 +11,18 @@
 	<groupId>com.juansa.proyectospringcloud</groupId>
 	<artifactId>proyectospringloud</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
 	<name>proyectospringloud</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>21</java.version>
 	</properties>
+	<modules>
+	<module>msvc-intervinientes</module>
+	<module>msvc-procedimientos</module>
+	</modules>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
