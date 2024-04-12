@@ -2,7 +2,6 @@ package com.juansa.msvcintervinientes.controller;
 
 import com.juansa.msvcintervinientes.dto.IntervinienteDTO;
 import com.juansa.msvcintervinientes.entities.Interviniente;
-import com.juansa.msvcintervinientes.repositories.IntervinienteRepository;
 import com.juansa.msvcintervinientes.services.IntervinienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class IntervinienteController {
     private IntervinienteService servicio;
 
     @Autowired
-    public IntervinienteController(IntervinienteService servicio, IntervinienteRepository repo){
+    public IntervinienteController(IntervinienteService servicio){
         this.servicio = servicio;
     }
 
