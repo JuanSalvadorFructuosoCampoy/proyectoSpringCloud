@@ -2,6 +2,7 @@ package com.juansa.msvcprocedimientos.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,10 +23,10 @@ public class Procedimiento {
 
     @Column (name = "numero_procedimiento")
     @NotBlank(message = "no puede quedar vacío ni con espacios en blanco")
-    private int numeroProcedimiento;
+    private String numeroProcedimiento;
 
     @Column(name = "anno")
-    @NotBlank(message = "no puede quedar vacío ni con espacios en blanco")
+    @NotNull(message = "no puede quedar vacío ni con espacios en blanco")
     private int anno;
 
     @Column(name = "fecha_creacion")

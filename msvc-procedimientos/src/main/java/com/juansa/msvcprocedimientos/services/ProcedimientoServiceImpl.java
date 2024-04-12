@@ -5,11 +5,14 @@ import com.juansa.msvcprocedimientos.entities.Procedimiento;
 import com.juansa.msvcprocedimientos.repositories.ProcedimientoRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class ProcedimientoServiceImpl implements ProcedimientoService{
 
     private final ProcedimientoRepository repositorio;
@@ -38,7 +41,7 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
     public Procedimiento guardarNuevo(ProcedimientoDTO procedimientoDTO) {
         Procedimiento procedimiento = modelMapper.map(procedimientoDTO, Procedimiento.class);
         procedimiento.setUsuarioCreacion(repositorio.getUsuario());
-        procedimiento.setFechaCreacion(repositorio.getFechaActual());
+        procedimiento.setFechaCreacion(LocalDate.now());
         return repositorio.save(procedimiento);
     }
 
@@ -50,7 +53,7 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
             throw new IllegalArgumentException("Procedimiento no encontrado");
         }
         Procedimiento procedimientoDb = optionalProcedimiento.get();
-        procedimientoDb.setFechaModificacion(repositorio.getFechaActual());
+        procedimientoDb.setFechaModificacion(LocalDate.now());
         procedimientoDb.setUsuarioModificacion(repositorio.getUsuario());
         return repositorio.save(procedimientoDb);
     }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +42,7 @@ public class IntervinienteServiceImpl implements IntervinienteService{
     public Interviniente guardarNuevo(IntervinienteDTO intervinienteDTO) {
         Interviniente interviniente = modelMapper.map(intervinienteDTO, Interviniente.class);
         interviniente.setUsuarioCreacion(repositorio.getUsuario());
-        interviniente.setFechaCreacion(repositorio.getFechaActual());
+        interviniente.setFechaCreacion(LocalDate.now());
         return repositorio.save(interviniente);
     }
 
@@ -53,7 +54,7 @@ public class IntervinienteServiceImpl implements IntervinienteService{
             throw new IllegalArgumentException("Interviniente no encontrado");
         }
         Interviniente intervinienteDb = optionalInterviniente.get();
-        intervinienteDb.setFechaModificacion(repositorio.getFechaActual());
+        intervinienteDb.setFechaModificacion(LocalDate.now());
         intervinienteDb.setUsuarioModificacion(repositorio.getUsuario());
         return repositorio.save(intervinienteDb);
     }

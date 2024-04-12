@@ -1,6 +1,7 @@
 package com.juansa.msvcprocedimientos.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,8 +14,8 @@ public class ProcedimientoDTO {
     private String nombre;
 
     @NotBlank(message = "no puede quedar vacío ni con espacios en blanco")
-    private int numeroProcedimiento;
+    private String numeroProcedimiento;
 
-    @NotBlank(message = "no puede quedar vacío ni con espacios en blanco")
+    @NotNull(message = "no puede quedar vacío ni con espacios en blanco")
     private int anno;
 }
