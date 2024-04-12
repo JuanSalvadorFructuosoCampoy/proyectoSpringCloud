@@ -1,7 +1,9 @@
 package com.juansa.msvcintervinientes.services;
 
+import com.juansa.msvcintervinientes.dto.IntervinienteDTO;
 import com.juansa.msvcintervinientes.entities.Interviniente;
 import com.juansa.msvcintervinientes.repositories.IntervinienteRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +16,12 @@ public class IntervinienteServiceImpl implements IntervinienteService{
 
     private final IntervinienteRepository repositorio;
 
+    private final ModelMapper modelMapper;
+
     @Autowired
-    public IntervinienteServiceImpl(IntervinienteRepository repositorio) {
+    public IntervinienteServiceImpl(IntervinienteRepository repositorio, ModelMapper modelMapper) {
         this.repositorio = repositorio;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -33,12 +38,34 @@ public class IntervinienteServiceImpl implements IntervinienteService{
 
     @Override
     @Transactional
-    public Interviniente guardar(Interviniente interviniente) {
+    public Interviniente guardarNuevo(IntervinienteDTO intervinienteDTO) {
+        Interviniente interviniente = modelMapper.map(intervinienteDTO, Interviniente.class);
+        interviniente.setUsuarioCreacion(repositorio.getUsuario());
+        interviniente.setFechaCreacion(repositorio.getFechaActual());
+        return repositorio.save(interviniente);
+    }
+
+    @Override
+    @Transactional
+    public Interviniente guardarEditar(IntervinienteDTO intervinienteDTO) {
+        Interviniente interviniente = modelMapper.map(intervinienteDTO, Interviniente.class);
+        interviniente.setFechaModificacion(repositorio.getFechaActual());
+        interviniente.setUsuarioModificacion(repositorio.getUsuario());
         return repositorio.save(interviniente);
     }
 
     @Override
     public void eliminar(Long id) {
         repositorio.deleteById(id);
+    }
+
+    @Override
+    public IntervinienteDTO convertirADto(Interviniente interviniente) {
+        return modelMapper.map(interviniente, IntervinienteDTO.class);
+    }
+
+    @Override
+    public Interviniente convertirAEntidad(IntervinienteDTO intervinienteDTO) {
+        return modelMapper.map(intervinienteDTO, Interviniente.class);
     }
 }
