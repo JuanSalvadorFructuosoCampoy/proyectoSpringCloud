@@ -2,6 +2,7 @@ package com.juansa.msvcprocedimientos.controller;
 
 import com.juansa.msvcprocedimientos.dto.ProcedimientoDTO;
 import com.juansa.msvcprocedimientos.entities.Procedimiento;
+import com.juansa.msvcprocedimientos.exception.NumeroDuplicadoException;
 import com.juansa.msvcprocedimientos.services.ProcedimientoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @RestController
 public class ProcedimientoController {
     private ProcedimientoService servicio;
+
 
     @Autowired
     public ProcedimientoController(ProcedimientoService servicio){
@@ -49,10 +51,17 @@ public class ProcedimientoController {
         if(result.hasErrors()){
             return validar(result);
         }
+
         Optional<Procedimiento> opt = servicio.porId(id);
         if(opt.isPresent()) {
             Procedimiento procedimientoDb = opt.get();
-            procedimientoDb.setNombre(procedimientoDTO.getNombre());
+
+            //En caso de que el número de procedimiento ya exista en la base de datos
+            if(!procedimientoDTO.getNumeroProcedimiento().equalsIgnoreCase(procedimientoDb.getNumeroProcedimiento()) &&
+            servicio.porNumero(procedimientoDTO.getNumeroProcedimiento()).isPresent()) {
+                throw new NumeroDuplicadoException();
+            }
+
             procedimientoDb.setNumeroProcedimiento(procedimientoDTO.getNumeroProcedimiento());
             procedimientoDb.setAnno(procedimientoDTO.getAnno());
             servicio.guardarEditar(procedimientoDb);
@@ -72,12 +81,22 @@ public class ProcedimientoController {
         return ResponseEntity.notFound().build();
     }
 
+
     private static ResponseEntity<Object> validar(BindingResult result) {
         Map<String, String> errores = new HashMap<>();
         result.getFieldErrors().forEach(err ->
-                errores.put("mensaje", "El campo " + err.getField() + " " + err.getDefaultMessage())
+                errores.put("error", "El campo " + err.getField() + " " + err.getDefaultMessage())
         );
         return ResponseEntity.badRequest().body(errores);
     }
+
+    @ExceptionHandler(NumeroDuplicadoException.class)
+    public ResponseEntity<Map<String, String>> manejarExcepcion(NumeroDuplicadoException e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+
 
 }

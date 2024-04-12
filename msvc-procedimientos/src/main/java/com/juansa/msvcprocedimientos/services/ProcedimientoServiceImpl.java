@@ -2,6 +2,8 @@ package com.juansa.msvcprocedimientos.services;
 
 import com.juansa.msvcprocedimientos.dto.ProcedimientoDTO;
 import com.juansa.msvcprocedimientos.entities.Procedimiento;
+import com.juansa.msvcprocedimientos.exception.NumeroDuplicadoException;
+import com.juansa.msvcprocedimientos.exception.ProcedimientoNoEncontradoException;
 import com.juansa.msvcprocedimientos.repositories.ProcedimientoRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +40,21 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
     }
 
     @Override
+    public Optional<Procedimiento> porNumero(String numero) {
+        return repositorio.getProcedimientoPorNumero(numero);
+    }
+
+    @Override
+    @Transactional
     public Procedimiento guardarNuevo(ProcedimientoDTO procedimientoDTO) {
-        Procedimiento procedimiento = modelMapper.map(procedimientoDTO, Procedimiento.class);
-        procedimiento.setUsuarioCreacion(repositorio.getUsuario());
-        procedimiento.setFechaCreacion(LocalDate.now());
-        return repositorio.save(procedimiento);
+            Procedimiento procedimiento = modelMapper.map(procedimientoDTO, Procedimiento.class);
+            Optional<Procedimiento> numeroProc = repositorio.getProcedimientoPorNumero(procedimientoDTO.getNumeroProcedimiento());
+            if (numeroProc.isPresent()) {
+                throw new NumeroDuplicadoException();
+            }
+            procedimiento.setUsuarioCreacion(repositorio.getUsuario());
+            procedimiento.setFechaCreacion(LocalDate.now());
+            return repositorio.save(procedimiento);
     }
 
     @Override
@@ -50,9 +62,13 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
     public Procedimiento guardarEditar(Procedimiento procedimiento) {
         Optional<Procedimiento> optionalProcedimiento = repositorio.findById(procedimiento.getId());
         if(optionalProcedimiento.isEmpty()){
-            throw new IllegalArgumentException("Procedimiento no encontrado");
+            throw new ProcedimientoNoEncontradoException();
         }
         Procedimiento procedimientoDb = optionalProcedimiento.get();
+        Optional<Procedimiento> numeroProc = repositorio.getProcedimientoPorNumero(procedimiento.getNumeroProcedimiento());
+        if(numeroProc.isPresent() && !numeroProc.get().getId().equals(procedimiento.getId())){
+            throw new NumeroDuplicadoException();
+        }
         procedimientoDb.setFechaModificacion(LocalDate.now());
         procedimientoDb.setUsuarioModificacion(repositorio.getUsuario());
         return repositorio.save(procedimientoDb);

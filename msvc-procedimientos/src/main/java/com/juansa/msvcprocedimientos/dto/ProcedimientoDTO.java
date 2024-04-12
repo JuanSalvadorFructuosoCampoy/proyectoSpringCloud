@@ -11,9 +11,6 @@ public class ProcedimientoDTO {
     private Long id;
 
     @NotBlank(message = "no puede quedar vacío ni con espacios en blanco")
-    private String nombre;
-
-    @NotBlank(message = "no puede quedar vacío ni con espacios en blanco")
     private String numeroProcedimiento;
 
     @NotNull(message = "no puede quedar vacío ni con espacios en blanco")

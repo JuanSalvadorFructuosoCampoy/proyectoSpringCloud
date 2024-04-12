@@ -17,11 +17,7 @@ public class Procedimiento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nombre")
-    @NotBlank(message = "no puede quedar vacío ni con espacios en blanco")
-    private String nombre;
-
-    @Column (name = "numero_procedimiento")
+    @Column (name = "numero_procedimiento", unique = true)
     @NotBlank(message = "no puede quedar vacío ni con espacios en blanco")
     private String numeroProcedimiento;
 

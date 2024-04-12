@@ -2,6 +2,7 @@ package com.juansa.msvcintervinientes.services;
 
 import com.juansa.msvcintervinientes.dto.IntervinienteDTO;
 import com.juansa.msvcintervinientes.entities.Interviniente;
+import com.juansa.msvcintervinientes.exception.IntervinienteNoEncontradoException;
 import com.juansa.msvcintervinientes.repositories.IntervinienteRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class IntervinienteServiceImpl implements IntervinienteService{
     public Interviniente guardarEditar(Interviniente interviniente) {
         Optional<Interviniente> optionalInterviniente = repositorio.findById(interviniente.getId());
         if(optionalInterviniente.isEmpty()) {
-            throw new IllegalArgumentException("Interviniente no encontrado");
+            throw new IntervinienteNoEncontradoException();
         }
         Interviniente intervinienteDb = optionalInterviniente.get();
         intervinienteDb.setFechaModificacion(LocalDate.now());
