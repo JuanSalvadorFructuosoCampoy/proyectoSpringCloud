@@ -1,6 +1,7 @@
 package com.juansa.msvcintervinientes.dto;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,9 +11,9 @@ public class IntervinienteDTO {
 
     private Long id;
 
-    @NotEmpty(message = "no puede quedar vacío")
+    @NotBlank(message = "no puede quedar vacío ni con espacios en blanco")
     private String nombre;
 
-    @NotEmpty(message = "no puede quedar vacío")
+    @NotBlank(message = "no puede quedar vacío ni con espacios en blanco")
     private String tipoIntervencion;
 }

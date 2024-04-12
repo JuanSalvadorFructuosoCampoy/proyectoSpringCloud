@@ -5,13 +5,13 @@ import com.juansa.msvcintervinientes.entities.Interviniente;
 import com.juansa.msvcintervinientes.repositories.IntervinienteRepository;
 import com.juansa.msvcintervinientes.services.IntervinienteService;
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,7 +19,6 @@ import java.util.Optional;
 @RestController
 public class IntervinienteController {
     private IntervinienteService servicio;
-
 
     @Autowired
     public IntervinienteController(IntervinienteService servicio, IntervinienteRepository repo){
@@ -38,18 +37,18 @@ public class IntervinienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Interviniente> crear(@Valid @RequestBody IntervinienteDTO intervinienteDTO, BindingResult result) {
+    public ResponseEntity<Object> crear(@Valid @RequestBody IntervinienteDTO intervinienteDTO, BindingResult result) {
         if(result.hasErrors()){
-           throw new ValidationException(result.toString());
+            return validar(result);
         }
         Interviniente intervinienteDb = servicio.guardarNuevo(intervinienteDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(intervinienteDb);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Interviniente> editar(@Valid @RequestBody IntervinienteDTO intervinienteDTO, BindingResult result, @PathVariable Long id) {
+    public ResponseEntity<Object> editar(@Valid @RequestBody IntervinienteDTO intervinienteDTO, BindingResult result, @PathVariable Long id) {
         if(result.hasErrors()){
-            throw new ValidationException(result.toString());
+            return validar(result);
         }
         Optional<Interviniente> opt = servicio.porId(id);
         if(opt.isPresent()) {
@@ -73,8 +72,12 @@ public class IntervinienteController {
         return ResponseEntity.notFound().build();
     }
 
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<Map<String, String>> handleValidationException(ValidationException ex) {
-        return ResponseEntity.badRequest().body(Map.of("mensaje", ex.getMessage()));
+
+    private static ResponseEntity<Object> validar(BindingResult result) {
+        Map<String, String> errores = new HashMap<>();
+        result.getFieldErrors().forEach(err ->
+                errores.put("mensaje", "El campo " + err.getField() + " " + err.getDefaultMessage())
+        );
+        return ResponseEntity.badRequest().body(errores);
     }
 }

@@ -16,7 +16,7 @@ public class Interviniente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nombre",unique = true)
+    @Column(name = "nombre")
     @NotBlank(message = "no puede quedar vacío ni con espacios en blanco")
     private String nombre;
 
