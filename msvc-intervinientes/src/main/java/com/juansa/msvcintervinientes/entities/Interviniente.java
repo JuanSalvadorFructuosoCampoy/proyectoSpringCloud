@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @Table(name = "intervinientes")
-public class Intervinientes {
+public class Interviniente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
