@@ -58,14 +58,4 @@ public class IntervinienteServiceImpl implements IntervinienteService{
     public void eliminar(Long id) {
         repositorio.deleteById(id);
     }
-
-    @Override
-    public IntervinienteDTO convertirADto(Interviniente interviniente) {
-        return modelMapper.map(interviniente, IntervinienteDTO.class);
-    }
-
-    @Override
-    public Interviniente convertirAEntidad(IntervinienteDTO intervinienteDTO) {
-        return modelMapper.map(intervinienteDTO, Interviniente.class);
-    }
 }

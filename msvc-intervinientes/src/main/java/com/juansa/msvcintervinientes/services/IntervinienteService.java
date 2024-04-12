@@ -9,8 +9,6 @@ import java.util.Optional;
 public interface IntervinienteService {
     List<Interviniente> listar();
     Optional<Interviniente> porId(Long id);
-    IntervinienteDTO convertirADto(Interviniente interviniente);
-    Interviniente convertirAEntidad(IntervinienteDTO intervinienteDTO);
     Interviniente guardarNuevo(IntervinienteDTO intervinienteDTO);
     Interviniente guardarEditar(IntervinienteDTO intervinienteDTO);
     void eliminar(Long id);
