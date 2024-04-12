@@ -19,6 +19,7 @@ import java.util.Optional;
 public class IntervinienteController {
     private IntervinienteService servicio;
 
+    private final static String ERROR_URL = "Error: URL de la solicitud incorrecta";
     @Autowired
     public IntervinienteController(IntervinienteService servicio){
         this.servicio = servicio;
@@ -44,6 +45,11 @@ public class IntervinienteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(intervinienteDb);
     }
 
+    @PostMapping("/{id}")
+    public ResponseEntity<Object> urlPostIncorrecta(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_URL);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Object> editar(@Valid @RequestBody IntervinienteDTO intervinienteDTO, BindingResult result, @PathVariable Long id) {
         if(result.hasErrors()){
@@ -61,6 +67,11 @@ public class IntervinienteController {
         }
     }
 
+    @PutMapping
+    public ResponseEntity<Object> urlPutIncorrecta(){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_URL);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Interviniente> eliminar(@PathVariable Long id) {
         Optional<Interviniente> opt = servicio.porId(id);
@@ -71,6 +82,10 @@ public class IntervinienteController {
         return ResponseEntity.notFound().build();
     }
 
+    @DeleteMapping
+    public ResponseEntity<Object> urlDeleteIncorrecta(){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_URL);
+    }
 
     private static ResponseEntity<Object> validar(BindingResult result) {
         Map<String, String> errores = new HashMap<>();
