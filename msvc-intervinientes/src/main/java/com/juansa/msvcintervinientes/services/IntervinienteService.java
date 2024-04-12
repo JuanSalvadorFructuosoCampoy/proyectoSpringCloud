@@ -10,7 +10,7 @@ public interface IntervinienteService {
     List<Interviniente> listar();
     Optional<Interviniente> porId(Long id);
     Interviniente guardarNuevo(IntervinienteDTO intervinienteDTO);
-    Interviniente guardarEditar(IntervinienteDTO intervinienteDTO);
+    Interviniente guardarEditar(Interviniente interviniente);
     void eliminar(Long id);
 
 }

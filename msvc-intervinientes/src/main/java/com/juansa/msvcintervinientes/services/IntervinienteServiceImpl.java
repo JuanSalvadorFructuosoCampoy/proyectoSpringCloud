@@ -47,11 +47,15 @@ public class IntervinienteServiceImpl implements IntervinienteService{
 
     @Override
     @Transactional
-    public Interviniente guardarEditar(IntervinienteDTO intervinienteDTO) {
-        Interviniente interviniente = modelMapper.map(intervinienteDTO, Interviniente.class);
-        interviniente.setFechaModificacion(repositorio.getFechaActual());
-        interviniente.setUsuarioModificacion(repositorio.getUsuario());
-        return repositorio.save(interviniente);
+    public Interviniente guardarEditar(Interviniente interviniente) {
+        Optional<Interviniente> optionalInterviniente = repositorio.findById(interviniente.getId());
+        if(optionalInterviniente.isEmpty()) {
+            throw new IllegalArgumentException("Interviniente no encontrado");
+        }
+        Interviniente intervinienteDb = optionalInterviniente.get();
+        intervinienteDb.setFechaModificacion(repositorio.getFechaActual());
+        intervinienteDb.setUsuarioModificacion(repositorio.getUsuario());
+        return repositorio.save(intervinienteDb);
     }
 
     @Override

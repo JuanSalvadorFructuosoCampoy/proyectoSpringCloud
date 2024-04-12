@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -54,7 +53,10 @@ public class IntervinienteController {
         }
         Optional<Interviniente> opt = servicio.porId(id);
         if(opt.isPresent()) {
-            Interviniente intervinienteDb = servicio.guardarEditar(intervinienteDTO);
+            Interviniente intervinienteDb = opt.get();
+            intervinienteDb.setNombre(intervinienteDTO.getNombre());
+            intervinienteDb.setTipoIntervencion(intervinienteDTO.getTipoIntervencion());
+            servicio.guardarEditar(intervinienteDb);
             return ResponseEntity.status(HttpStatus.CREATED).body(intervinienteDb);
         } else {
             return ResponseEntity.notFound().build();

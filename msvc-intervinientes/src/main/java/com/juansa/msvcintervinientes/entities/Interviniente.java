@@ -1,7 +1,7 @@
 package com.juansa.msvcintervinientes.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,12 +16,12 @@ public class Interviniente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nombre")
-    @NotEmpty(message = "no puede quedar vacío")
+    @Column(name = "nombre",unique = true)
+    @NotBlank(message = "no puede quedar vacío ni con espacios en blanco")
     private String nombre;
 
     @Column(name = "tipo_intervencion")
-    @NotEmpty(message = "no puede quedar vacío")
+    @NotBlank(message = "no puede quedar vacío ni con espacios en blanco")
     private String tipoIntervencion;
 
     @Column(name = "fecha_creacion")
