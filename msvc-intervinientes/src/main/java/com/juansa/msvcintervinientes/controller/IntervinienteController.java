@@ -1,7 +1,7 @@
 package com.juansa.msvcintervinientes.controller;
 
 import com.juansa.msvcintervinientes.dto.IntervinienteDTO;
-import com.juansa.msvcintervinientes.entities.Interviniente;
+import com.juansa.msvcintervinientes.models.entity.Interviniente;
 import com.juansa.msvcintervinientes.services.IntervinienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import java.util.Optional;
 public class IntervinienteController {
     private IntervinienteService servicio;
 
-    private final static String ERROR_URL = "Error: URL de la solicitud incorrecta";
+    private static final String ERROR_URL = "Error: URL de la solicitud incorrecta";
     @Autowired
     public IntervinienteController(IntervinienteService servicio){
         this.servicio = servicio;
@@ -85,6 +85,11 @@ public class IntervinienteController {
     @DeleteMapping
     public ResponseEntity<Object> urlDeleteIncorrecta(){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_URL);
+    }
+
+    @GetMapping("/intervinientes-por-procedimiento")
+    public ResponseEntity<Object> obtenerIntervinientesPorProcedimiento(@RequestParam List<Long> ids) {
+        return ResponseEntity.ok(servicio.listarPorIds(ids));
     }
 
     private static ResponseEntity<Object> validar(BindingResult result) {

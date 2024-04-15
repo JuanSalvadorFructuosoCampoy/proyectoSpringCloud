@@ -1,12 +1,14 @@
-package com.juansa.msvcprocedimientos.entities;
+package com.juansa.msvcprocedimientos.models.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.juansa.msvcprocedimientos.models.Interviniente;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -36,4 +38,8 @@ public class Procedimiento {
 
     @Column(name = "usuario_modificacion")
     private String usuarioModificacion;
+
+    @Transient
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Interviniente> intervinientes;
 }

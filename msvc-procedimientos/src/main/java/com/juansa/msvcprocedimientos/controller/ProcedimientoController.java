@@ -1,7 +1,7 @@
 package com.juansa.msvcprocedimientos.controller;
 
 import com.juansa.msvcprocedimientos.dto.ProcedimientoDTO;
-import com.juansa.msvcprocedimientos.entities.Procedimiento;
+import com.juansa.msvcprocedimientos.models.entity.Procedimiento;
 import com.juansa.msvcprocedimientos.exception.NumeroDuplicadoException;
 import com.juansa.msvcprocedimientos.services.ProcedimientoService;
 import jakarta.validation.Valid;

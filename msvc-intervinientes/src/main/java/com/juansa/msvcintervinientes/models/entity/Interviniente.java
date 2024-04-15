@@ -1,4 +1,4 @@
-package com.juansa.msvcintervinientes.entities;
+package com.juansa.msvcintervinientes.models.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

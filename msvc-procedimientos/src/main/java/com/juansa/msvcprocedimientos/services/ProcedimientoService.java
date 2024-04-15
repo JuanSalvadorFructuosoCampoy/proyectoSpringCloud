@@ -1,7 +1,7 @@
 package com.juansa.msvcprocedimientos.services;
 
 import com.juansa.msvcprocedimientos.dto.ProcedimientoDTO;
-import com.juansa.msvcprocedimientos.entities.Procedimiento;
+import com.juansa.msvcprocedimientos.models.entity.Procedimiento;
 
 import java.util.List;
 import java.util.Optional;

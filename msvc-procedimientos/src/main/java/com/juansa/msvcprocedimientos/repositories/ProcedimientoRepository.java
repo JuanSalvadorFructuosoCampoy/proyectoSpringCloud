@@ -1,6 +1,6 @@
 package com.juansa.msvcprocedimientos.repositories;
 
-import com.juansa.msvcprocedimientos.entities.Procedimiento;
+import com.juansa.msvcprocedimientos.models.entity.Procedimiento;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

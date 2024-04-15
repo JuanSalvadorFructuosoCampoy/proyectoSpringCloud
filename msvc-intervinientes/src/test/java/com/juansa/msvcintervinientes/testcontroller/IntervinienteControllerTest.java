@@ -1,7 +1,7 @@
 package com.juansa.msvcintervinientes.testcontroller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.juansa.msvcintervinientes.dto.IntervinienteDTO;
-import com.juansa.msvcintervinientes.entities.Interviniente;
+import com.juansa.msvcintervinientes.models.entity.Interviniente;
 import com.juansa.msvcintervinientes.services.IntervinienteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class IntervinienteControllerTest {
+class IntervinienteControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

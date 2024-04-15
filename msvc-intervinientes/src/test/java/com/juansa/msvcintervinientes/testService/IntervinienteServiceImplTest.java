@@ -1,7 +1,7 @@
 package com.juansa.msvcintervinientes.testService;
 
 import com.juansa.msvcintervinientes.dto.IntervinienteDTO;
-import com.juansa.msvcintervinientes.entities.Interviniente;
+import com.juansa.msvcintervinientes.models.entity.Interviniente;
 import com.juansa.msvcintervinientes.exception.IntervinienteNoEncontradoException;
 import com.juansa.msvcintervinientes.repositories.IntervinienteRepository;
 import com.juansa.msvcintervinientes.services.IntervinienteServiceImpl;

@@ -1,7 +1,7 @@
 package com.juansa.msvcintervinientes.services;
 
 import com.juansa.msvcintervinientes.dto.IntervinienteDTO;
-import com.juansa.msvcintervinientes.entities.Interviniente;
+import com.juansa.msvcintervinientes.models.entity.Interviniente;
 import com.juansa.msvcintervinientes.exception.IntervinienteNoEncontradoException;
 import com.juansa.msvcintervinientes.repositories.IntervinienteRepository;
 import org.modelmapper.ModelMapper;
@@ -36,6 +36,11 @@ public class IntervinienteServiceImpl implements IntervinienteService{
     @Transactional(readOnly = true)
     public Optional<Interviniente> porId(Long id) {
         return repositorio.findById(id);
+    }
+
+    @Override
+    public List<Interviniente> listarPorIds(Iterable<Long> ids) {
+        return (List<Interviniente>) repositorio.findAllById(ids);
     }
 
     @Override

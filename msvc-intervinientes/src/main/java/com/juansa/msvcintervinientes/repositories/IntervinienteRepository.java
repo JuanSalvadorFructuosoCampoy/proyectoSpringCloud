@@ -1,6 +1,6 @@
 package com.juansa.msvcintervinientes.repositories;
 
-import com.juansa.msvcintervinientes.entities.Interviniente;
+import com.juansa.msvcintervinientes.models.entity.Interviniente;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
