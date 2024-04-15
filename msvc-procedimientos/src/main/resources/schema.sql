@@ -1,4 +1,4 @@
-CREATE TABLE Procedimientos (
+CREATE TABLE IF NOT EXISTS Procedimientos (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     numero_procedimiento VARCHAR(255),
     anno INT,
