@@ -1,6 +1,5 @@
 package com.juansa.msvcintervinientes.models.entity;
 
-import com.juansa.msvcintervinientes.models.Procedimiento;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -38,7 +37,6 @@ public class Interviniente {
     private String usuarioModificacion;
 
     @Transient
-    @Column(name = "procedimiento_id")
     private Long procedimientoId;
 
 }

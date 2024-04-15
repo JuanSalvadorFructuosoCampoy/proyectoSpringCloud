@@ -40,7 +40,6 @@ public class Procedimiento {
 
     @Transient
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "procedimiento_id")
     private List<Interviniente> intervinientes;
 
     public Procedimiento() {
