@@ -2,6 +2,7 @@ package com.juansa.msvcintervinientes.testService;
 
 import com.juansa.msvcintervinientes.dto.IntervinienteDTO;
 import com.juansa.msvcintervinientes.entities.Interviniente;
+import com.juansa.msvcintervinientes.exception.IntervinienteNoEncontradoException;
 import com.juansa.msvcintervinientes.repositories.IntervinienteRepository;
 import com.juansa.msvcintervinientes.services.IntervinienteServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -115,5 +115,18 @@ class IntervinienteServiceImplTest {
 
         // Verificar que el método eliminar() no lanza ninguna excepción
         verify(repositorio, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void testGuardarEditarThrowsException() {
+        // Crear un Interviniente
+        Interviniente interviniente = new Interviniente();
+        interviniente.setId(1L);
+
+        // Simular el comportamiento del método findById() del repositorio para devolver un Optional vacío
+        when(repositorio.findById(1L)).thenReturn(Optional.empty());
+
+        // Llamar al método guardarEditar() del servicio y verificar que lanza la excepción IntervinienteNoEncontradoException
+        assertThrows(IntervinienteNoEncontradoException.class, () -> servicio.guardarEditar(interviniente));
     }
 }
