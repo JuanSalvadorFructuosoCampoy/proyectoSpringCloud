@@ -32,7 +32,7 @@ public class ProcedimientoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Procedimiento> porId(@PathVariable Long id) {
-        Optional<Procedimiento> opt = servicio.porId(id);
+        Optional<Procedimiento> opt = servicio.porIdConIntervinientes(id);
         return opt.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 

@@ -1,6 +1,8 @@
 package com.juansa.msvcprocedimientos.services;
 
+import com.juansa.msvcprocedimientos.clients.IntervinienteClientRest;
 import com.juansa.msvcprocedimientos.dto.ProcedimientoDTO;
+import com.juansa.msvcprocedimientos.models.Interviniente;
 import com.juansa.msvcprocedimientos.models.entity.Procedimiento;
 import com.juansa.msvcprocedimientos.exception.NumeroDuplicadoException;
 import com.juansa.msvcprocedimientos.exception.ProcedimientoNoEncontradoException;
@@ -21,10 +23,13 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
 
     private final ModelMapper modelMapper;
 
+    private final IntervinienteClientRest cliente;
+
     @Autowired
-    public ProcedimientoServiceImpl(ProcedimientoRepository repositorio, ModelMapper modelMapper) {
+    public ProcedimientoServiceImpl(ProcedimientoRepository repositorio, ModelMapper modelMapper, IntervinienteClientRest cliente) {
         this.repositorio = repositorio;
         this.modelMapper = modelMapper;
+        this.cliente = cliente;
     }
 
     @Override
@@ -37,6 +42,22 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
     @Transactional(readOnly = true)
     public Optional<Procedimiento> porId(Long id) {
         return repositorio.findById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Procedimiento> porIdConIntervinientes(Long id) {
+        Optional<Procedimiento> o = repositorio.findById(id);
+        if (o.isPresent()) {
+            Procedimiento procedimiento = o.get();
+            if (procedimiento.getIntervinientes() != null && !procedimiento.getIntervinientes().isEmpty()) {
+                List<Long> ids = procedimiento.getIntervinientes().stream().map(Interviniente::getId).toList();
+                List<Interviniente> intervinientes = cliente.obtenerIntervinientesPorProcedimiento(ids);
+                procedimiento.setIntervinientes(intervinientes);
+            }
+            return Optional.of(procedimiento);
+        }
+        return Optional.empty();
     }
 
     @Override
