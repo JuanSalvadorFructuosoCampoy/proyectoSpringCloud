@@ -5,6 +5,7 @@ import com.juansa.msvcprocedimientos.models.Interviniente;
 import com.juansa.msvcprocedimientos.models.entity.Procedimiento;
 import com.juansa.msvcprocedimientos.exception.NumeroDuplicadoException;
 import com.juansa.msvcprocedimientos.services.ProcedimientoService;
+import feign.FeignException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,8 +19,9 @@ import java.util.*;
 public class ProcedimientoController {
     private ProcedimientoService servicio;
     private static final String ERROR_URL = "Error: URL de la solicitud incorrecta";
+
     @Autowired
-    public ProcedimientoController(ProcedimientoService servicio){
+    public ProcedimientoController(ProcedimientoService servicio) {
         this.servicio = servicio;
     }
 
@@ -36,7 +38,7 @@ public class ProcedimientoController {
 
     @PostMapping
     public ResponseEntity<Object> crear(@Valid @RequestBody ProcedimientoDTO procedimientoDTO, BindingResult result) {
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             return validar(result);
         }
         Procedimiento procedimientoDb = servicio.guardarNuevo(procedimientoDTO);
@@ -44,23 +46,23 @@ public class ProcedimientoController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<Object> urlPostIncorrecta(@PathVariable Long id){
+    public ResponseEntity<Object> urlPostIncorrecta(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_URL);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> editar (@Valid @RequestBody ProcedimientoDTO procedimientoDTO, BindingResult result, @PathVariable Long id) {
-        if(result.hasErrors()){
+    public ResponseEntity<Object> editar(@Valid @RequestBody ProcedimientoDTO procedimientoDTO, BindingResult result, @PathVariable Long id) {
+        if (result.hasErrors()) {
             return validar(result);
         }
 
         Optional<Procedimiento> opt = servicio.porId(id);
-        if(opt.isPresent()) {
+        if (opt.isPresent()) {
             Procedimiento procedimientoDb = opt.get();
 
             //En caso de que el número de procedimiento ya exista en la base de datos
-            if(!procedimientoDTO.getNumeroProcedimiento().equalsIgnoreCase(procedimientoDb.getNumeroProcedimiento()) &&
-            servicio.porNumero(procedimientoDTO.getNumeroProcedimiento()).isPresent()) {
+            if (!procedimientoDTO.getNumeroProcedimiento().equalsIgnoreCase(procedimientoDb.getNumeroProcedimiento()) &&
+                    servicio.porNumero(procedimientoDTO.getNumeroProcedimiento()).isPresent()) {
                 throw new NumeroDuplicadoException();
             }
 
@@ -74,9 +76,26 @@ public class ProcedimientoController {
     }
 
     @PutMapping
-    public ResponseEntity<Object> urlPutIncorrecta(){
+    public ResponseEntity<Object> urlPutIncorrecta() {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_URL);
     }
+
+    //COMPROBAR ESTE MÉTODO
+    @PutMapping("/aniadir-interviniente/{procedimientoId}")
+    public ResponseEntity<Object> aniadirInterviniente(@RequestBody Interviniente interviniente, @PathVariable Long procedimientoId) {
+    Optional<Interviniente> opt;
+    try{
+        opt = servicio.aniadirInterviniente(interviniente, procedimientoId);
+    }catch(FeignException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Collections.singletonMap("mensaje", "No existe el interviniente por el id o error en la comunicación: " + e.getMessage()));
+
+    }
+    if(opt.isPresent()) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(opt.get());
+    }
+    return ResponseEntity.notFound().build();
+}
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Procedimiento> eliminar(@PathVariable Long id) {

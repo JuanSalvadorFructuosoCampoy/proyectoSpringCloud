@@ -12,8 +12,10 @@ public interface ProcedimientoService {
     Optional<Procedimiento> porId(Long id);
     Optional<Procedimiento> porIdConIntervinientes(Long id);
     Optional<Procedimiento> porNumero(String numero);
-    Optional<Interviniente> asignarInterviniente(Interviniente interviniente, Long procedimientoId);
     Procedimiento guardarNuevo(ProcedimientoDTO procedimientoDTO);
     Procedimiento guardarEditar(Procedimiento procedimiento);
     void eliminar(Long id);
+
+    Optional<Interviniente> asignarInterviniente(Interviniente interviniente, Long procedimientoId);
+    Optional<Interviniente> aniadirInterviniente(Interviniente interviniente, Long procedimientoId);
 }

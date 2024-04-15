@@ -80,6 +80,21 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
     }
 
     @Override
+    public Optional<Interviniente> aniadirInterviniente(Interviniente interviniente, Long procedimientoId) {
+        Optional<Procedimiento> opt = repositorio.findById(procedimientoId);
+        if(opt.isPresent()) {
+            Interviniente invervinienteDb = cliente.porId(interviniente.getId());
+            Procedimiento procedimiento = opt.get();
+            procedimiento.getIntervinientes().add(invervinienteDb);
+            procedimiento.setFechaModificacion(LocalDate.now());
+            procedimiento.setUsuarioModificacion(repositorio.getUsuario());
+            repositorio.save(procedimiento);
+            return Optional.of(invervinienteDb);
+        }
+        return Optional.empty();
+    }
+
+    @Override
     @Transactional
     public Procedimiento guardarNuevo(ProcedimientoDTO procedimientoDTO) {
             Procedimiento procedimiento = modelMapper.map(procedimientoDTO, Procedimiento.class);
