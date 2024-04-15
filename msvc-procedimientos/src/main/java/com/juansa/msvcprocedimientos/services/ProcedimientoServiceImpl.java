@@ -50,13 +50,9 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
         Optional<Procedimiento> o = repositorio.findById(id);
         if (o.isPresent()) {
             Procedimiento procedimiento = o.get();
-            System.out.println("Procedimiento con el detalle de sus intervinientes:");
-            System.out.println(procedimiento);
-            if (procedimiento.getIntervinientes() != null && !procedimiento.getIntervinientes().isEmpty()) {
-                List<Long> ids = procedimiento.getIntervinientes().stream().map(Interviniente::getId).toList();
-                List<Interviniente> intervinientes = cliente.obtenerIntervinientesPorProcedimiento(ids);
+
+                List<Interviniente> intervinientes = cliente.obtenerIntervinientesPorProcedimiento(procedimiento.getId());
                 procedimiento.setIntervinientes(intervinientes);
-            }
             return Optional.of(procedimiento);
         }
         return Optional.empty();
@@ -75,10 +71,6 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
             Interviniente intervinienteDb = cliente.porId(interviniente.getId());
             Procedimiento procedimiento = opt.get();
             procedimiento.getIntervinientes().add(intervinienteDb);
-            System.out.println("IntervinienteDB en el servicio de Procedimiento:");
-            System.out.println(intervinienteDb);
-            System.out.println("Procedimiento en el servicio de Procedimiento:");
-            System.out.println(procedimiento);
             procedimiento.setFechaModificacion(LocalDate.now());
             procedimiento.setUsuarioModificacion(repositorio.getUsuario());
             repositorio.save(procedimiento);

@@ -39,7 +39,6 @@ public class Procedimiento {
     private String usuarioModificacion;
 
     @Transient
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Interviniente> intervinientes;
 
     public Procedimiento() {

@@ -39,8 +39,8 @@ public class IntervinienteServiceImpl implements IntervinienteService{
     }
 
     @Override
-    public List<Interviniente> listarPorIds(Iterable<Long> ids) {
-        return (List<Interviniente>) repositorio.findAllById(ids);
+    public List<Interviniente> listarPorProc(Long procedimientoId) {
+        return repositorio.buscarPorProcedimientoId(procedimientoId);
     }
 
     @Override

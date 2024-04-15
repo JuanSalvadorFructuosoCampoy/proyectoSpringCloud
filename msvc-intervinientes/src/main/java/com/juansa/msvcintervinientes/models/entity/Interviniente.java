@@ -36,7 +36,7 @@ public class Interviniente {
     @Column(name = "usuario_modificacion")
     private String usuarioModificacion;
 
-    @Transient
+    @Column(name = "procedimiento_id")
     private Long procedimientoId;
 
 }

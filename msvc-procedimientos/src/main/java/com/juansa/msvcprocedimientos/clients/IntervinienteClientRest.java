@@ -14,6 +14,6 @@ public interface IntervinienteClientRest {
     @PostMapping("/")
     Interviniente crear(@RequestBody Interviniente interviniente);
 
-    @GetMapping("/intervinientes-por-procedimiento")
-    List<Interviniente> obtenerIntervinientesPorProcedimiento(@RequestParam Iterable<Long> ids);
+    @GetMapping("/intervinientes-por-procedimiento/{id}")
+    List<Interviniente> obtenerIntervinientesPorProcedimiento(@PathVariable Long id);
 }

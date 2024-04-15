@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface IntervinienteService {
     List<Interviniente> listar();
     Optional<Interviniente> porId(Long id);
-    List<Interviniente> listarPorIds(Iterable<Long> ids);
+    List<Interviniente> listarPorProc(Long procedimientoId);
     Interviniente guardarNuevo(IntervinienteDTO intervinienteDTO);
     Interviniente guardarEditar(Interviniente interviniente);
     void eliminar(Long id);

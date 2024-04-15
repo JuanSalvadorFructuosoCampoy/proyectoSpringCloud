@@ -13,4 +13,6 @@ public class Interviniente {
     private String nombre;
 
     private String tipoIntervencion;
+
+    private Long procedimientoId;
 }

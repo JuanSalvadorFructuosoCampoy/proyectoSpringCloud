@@ -87,9 +87,9 @@ public class IntervinienteController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_URL);
     }
 
-    @GetMapping("/intervinientes-por-procedimiento")
-    public ResponseEntity<Object> obtenerIntervinientesPorProcedimiento(@RequestParam List<Long> ids) {
-        return ResponseEntity.ok(servicio.listarPorIds(ids));
+    @GetMapping("/intervinientes-por-procedimiento/{id}")
+    public ResponseEntity<Object> obtenerIntervinientesPorProcedimiento(@PathVariable Long id) {
+        return ResponseEntity.ok(servicio.listarPorProc(id));
     }
 
     private static ResponseEntity<Object> validar(BindingResult result) {
