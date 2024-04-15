@@ -1,4 +1,4 @@
-CREATE TABLE Intervinientes (
+CREATE TABLE IF NOT EXISTS Intervinientes (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50),
     tipo_intervencion VARCHAR(50),

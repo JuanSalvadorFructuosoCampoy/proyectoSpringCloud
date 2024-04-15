@@ -1,7 +1,5 @@
 package com.juansa.msvcintervinientes.testcontroller;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.juansa.msvcintervinientes.controller.IntervinienteController;
 import com.juansa.msvcintervinientes.dto.IntervinienteDTO;
 import com.juansa.msvcintervinientes.entities.Interviniente;
 import com.juansa.msvcintervinientes.services.IntervinienteService;
@@ -25,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
- class IntervinienteControllerTest {
+public class IntervinienteControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -75,6 +73,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 .andExpect(status().isCreated());
     }
 
+   @Test
+   void testCrearError() throws Exception {
+      IntervinienteDTO intervinienteDTO = new IntervinienteDTO();
+      intervinienteDTO.setNombre("");
+      intervinienteDTO.setTipoIntervencion("Tipo");
+
+      when(intervinienteService.guardarNuevo(any(IntervinienteDTO.class))).thenReturn(interviniente);
+
+      mockMvc.perform(post("/")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(new ObjectMapper().writeValueAsString(intervinienteDTO)))
+              .andExpect(status().isBadRequest());
+   }
+
     @Test
      void testEditar() throws Exception {
         IntervinienteDTO intervinienteDTO = new IntervinienteDTO();
@@ -90,6 +102,36 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 .andExpect(status().isCreated());
     }
 
+   @Test
+   void testEditarNotFound() throws Exception {
+      IntervinienteDTO intervinienteDTO = new IntervinienteDTO();
+      intervinienteDTO.setNombre("Nombre");
+      intervinienteDTO.setTipoIntervencion("Tipo");
+
+      when(intervinienteService.porId(10L)).thenReturn(Optional.empty());
+      when(intervinienteService.guardarEditar(any(Interviniente.class))).thenReturn(interviniente);
+
+      mockMvc.perform(put("/10")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(new ObjectMapper().writeValueAsString(intervinienteDTO)))
+              .andExpect(status().isNotFound());
+   }
+
+   @Test
+   void testEditarError() throws Exception {
+      IntervinienteDTO intervinienteDTO = new IntervinienteDTO();
+      intervinienteDTO.setNombre("");
+      intervinienteDTO.setTipoIntervencion("Tipo");
+
+      when(intervinienteService.porId(anyLong())).thenReturn(Optional.of(interviniente));
+      when(intervinienteService.guardarEditar(any(Interviniente.class))).thenReturn(interviniente);
+
+      mockMvc.perform(put("/1")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(new ObjectMapper().writeValueAsString(intervinienteDTO)))
+              .andExpect(status().isBadRequest());
+   }
+
     @Test
      void testEliminar() throws Exception {
         when(intervinienteService.porId(anyLong())).thenReturn(Optional.of(interviniente));
@@ -98,6 +140,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
+
+   @Test
+   void testEliminarNotFound() throws Exception {
+      when(intervinienteService.porId(10L)).thenReturn(Optional.empty());
+
+      mockMvc.perform(delete("/10")
+                      .contentType(MediaType.APPLICATION_JSON))
+              .andExpect(status().isNotFound());
+   }
 
     @Test
      void testUrlPostIncorrecta() throws Exception {
