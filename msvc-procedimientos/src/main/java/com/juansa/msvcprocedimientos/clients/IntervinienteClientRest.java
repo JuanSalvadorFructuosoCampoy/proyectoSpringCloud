@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "msvc-intervinientes")
+@FeignClient(name = "msvc-intervinientes", url = "localhost:8002")
 public interface IntervinienteClientRest {
     @GetMapping("/{id}")
     Interviniente porId(@PathVariable Long id);

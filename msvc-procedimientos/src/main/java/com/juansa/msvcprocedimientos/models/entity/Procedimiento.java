@@ -4,15 +4,14 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import com.juansa.msvcprocedimientos.models.Interviniente;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
-@NoArgsConstructor
 @Table(name = "procedimientos")
 public class Procedimiento {
     @Id
@@ -40,6 +39,11 @@ public class Procedimiento {
     private String usuarioModificacion;
 
     @Transient
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "procedimiento_id")
     private List<Interviniente> intervinientes;
+
+    public Procedimiento() {
+        this.intervinientes = new ArrayList<>();
+    }
 }

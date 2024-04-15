@@ -1,6 +1,7 @@
 package com.juansa.msvcprocedimientos.controller;
 
 import com.juansa.msvcprocedimientos.dto.ProcedimientoDTO;
+import com.juansa.msvcprocedimientos.models.Interviniente;
 import com.juansa.msvcprocedimientos.models.entity.Procedimiento;
 import com.juansa.msvcprocedimientos.exception.NumeroDuplicadoException;
 import com.juansa.msvcprocedimientos.services.ProcedimientoService;
@@ -11,10 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class ProcedimientoController {
@@ -93,6 +91,21 @@ public class ProcedimientoController {
     @DeleteMapping
     public ResponseEntity<Object> urlDeleteIncorrecta(){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_URL);
+    }
+
+    @PutMapping("/asignar-interviniente/{procedimientoId}")
+    public ResponseEntity<Object> asignarInterviniente(@RequestBody Interviniente interviniente, @PathVariable Long procedimientoId) {
+        Optional<Interviniente> opt;
+        try{
+            opt = servicio.asignarInterviniente(interviniente, procedimientoId);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("mensaje","No existe el interviniente por el id o error en la comunicación: " + e.getMessage()));
+        }
+        if(opt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(opt.get());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     private static ResponseEntity<Object> validar(BindingResult result) {
