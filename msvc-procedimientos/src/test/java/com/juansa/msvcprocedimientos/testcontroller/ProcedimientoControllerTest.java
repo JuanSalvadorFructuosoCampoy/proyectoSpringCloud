@@ -23,7 +23,10 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
+import static org.hamcrest.Matchers.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 class ProcedimientoControllerTest {
@@ -45,12 +48,21 @@ class ProcedimientoControllerTest {
     }
 
     @Test
-     void testGetById() throws Exception {
-        when(procedimientoService.porId(anyLong())).thenReturn(Optional.of(procedimiento));
+    void testPorId() throws Exception {
+        Long procedimientoId = 1L;
+        Procedimiento procedimiento = new Procedimiento();
+        procedimiento.setId(procedimientoId);
+        procedimiento.setNumeroProcedimiento("PR0001");
 
-        mockMvc.perform(get("/1")
+        when(procedimientoService.porIdConIntervinientes(procedimientoId)).thenReturn(Optional.of(procedimiento));
+
+        mockMvc.perform(get("/" + procedimientoId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(procedimiento.getId().intValue())))
+                .andExpect(jsonPath("$.numeroProcedimiento", is(procedimiento.getNumeroProcedimiento())));
+
+        verify(procedimientoService, times(1)).porIdConIntervinientes(procedimientoId);
     }
 
     @Test
