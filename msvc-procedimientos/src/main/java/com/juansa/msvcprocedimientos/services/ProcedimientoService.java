@@ -19,4 +19,5 @@ public interface ProcedimientoService {
     Optional<Interviniente> obtenerInterviniente(Long id);
     Optional<Interviniente> asignarInterviniente(Interviniente interviniente, Long procedimientoId);
     Optional<Interviniente> crearInterviniente(Interviniente interviniente, Long procedimientoId);
+    Optional<Interviniente> eliminarInterviniente(Interviniente interviniente, Long procedimientoId);
 }

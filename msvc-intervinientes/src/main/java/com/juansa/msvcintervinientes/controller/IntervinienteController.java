@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @RestController
 public class IntervinienteController {
-    private IntervinienteService servicio;
+    private final IntervinienteService servicio;
 
     private static final String ERROR_URL = "Error: URL de la solicitud incorrecta";
     @Autowired
@@ -87,6 +87,7 @@ public class IntervinienteController {
         }
         return ResponseEntity.notFound().build();
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Interviniente> eliminar(@PathVariable Long id) {

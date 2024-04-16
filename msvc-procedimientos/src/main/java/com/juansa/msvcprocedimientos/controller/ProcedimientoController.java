@@ -100,13 +100,13 @@ public class ProcedimientoController {
         Optional<Interviniente> opt = servicio.obtenerInterviniente(interId);
         if(opt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Collections.singletonMap("mensaje","No existe el interviniente indicado."));
+                    .body(Collections.singletonMap(ERROR_MESSAGE,"No existe el interviniente indicado."));
         }
         try{
             opt = servicio.asignarInterviniente(opt.get(), procedimientoId);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Collections.singletonMap("mensaje","No existe el interviniente por el id o error en la comunicación: " +
+                    .body(Collections.singletonMap(ERROR_MESSAGE,"No existe el interviniente por el id o error en la comunicación: " +
                             e.getMessage()));
         }
         if(opt.isPresent()) {
@@ -122,11 +122,31 @@ public class ProcedimientoController {
             opt = servicio.crearInterviniente(interviniente, procedimientoId);
         }catch(FeignException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Collections.singletonMap("mensaje","No se pudo crear el interviniente o error en la comunicación: "
+                    .body(Collections.singletonMap(ERROR_MESSAGE,"No se pudo crear el interviniente o error en la comunicación: "
                             + e.getMessage()));
         }
         if(opt.isPresent()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(opt.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/eliminar-int/{procedimientoId}")
+    public ResponseEntity<Object> eliminarInterviniente(@RequestParam Long interId, @PathVariable Long procedimientoId) {
+        Optional<Interviniente> opt = servicio.obtenerInterviniente(interId);
+        if(opt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap(ERROR_MESSAGE,"No existe el interviniente indicado."));
+        }
+        try {
+            opt = servicio.eliminarInterviniente(opt.get(), procedimientoId);
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap(ERROR_MESSAGE,"No existe el interviniente por el id o error en la comunicación: " +
+                            e.getMessage()));
+        }
+        if(opt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(opt.get());
         }
         return ResponseEntity.notFound().build();
     }

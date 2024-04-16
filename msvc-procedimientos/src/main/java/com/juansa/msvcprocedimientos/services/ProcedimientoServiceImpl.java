@@ -101,6 +101,26 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
         return Optional.empty();
     }
 
+    @Override
+    public Optional<Interviniente> eliminarInterviniente(Interviniente interviniente, Long procedimientoId) {
+        Optional<Procedimiento> opt = repositorio.findById(procedimientoId);
+        if(opt.isPresent()) {
+            Optional<Interviniente> intervinienteDb = cliente.porId(interviniente.getId());
+            if(intervinienteDb.isEmpty()) {
+                return Optional.empty();
+            }
+            Procedimiento procedimiento = opt.get();
+            procedimiento.getIntervinientes().remove(intervinienteDb.get());
+            procedimiento.setFechaModificacion(LocalDate.now());
+            procedimiento.setUsuarioModificacion(repositorio.getUsuario());
+            intervinienteDb.get().setProcedimientoId(null);
+            repositorio.save(procedimiento);
+            cliente.actualizacion(intervinienteDb.get());
+            return Optional.of(intervinienteDb.get());
+        }
+        return Optional.empty();
+    }
+
 
     @Override
     @Transactional
