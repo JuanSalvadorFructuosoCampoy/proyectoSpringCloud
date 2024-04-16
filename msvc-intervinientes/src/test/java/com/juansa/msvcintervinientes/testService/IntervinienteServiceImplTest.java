@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -128,5 +129,23 @@ class IntervinienteServiceImplTest {
 
         // Llamar al método guardarEditar() del servicio y verificar que lanza la excepción IntervinienteNoEncontradoException
         assertThrows(IntervinienteNoEncontradoException.class, () -> servicio.guardarEditar(interviniente));
+    }
+
+    @Test
+    void testListarPorProc() {
+        Long procedimientoId = 1L;
+        List<Interviniente> intervinientes = new ArrayList<>();
+        Interviniente interviniente = new Interviniente();
+        interviniente.setId(1L);
+        interviniente.setNombre("Nombre");
+        interviniente.setTipoIntervencion("Tipo");
+        intervinientes.add(interviniente);
+
+        when(repositorio.buscarPorProcedimientoId(procedimientoId)).thenReturn(intervinientes);
+
+        List<Interviniente> result = servicio.listarPorProc(procedimientoId);
+
+        assertEquals(intervinientes, result);
+        verify(repositorio, times(1)).buscarPorProcedimientoId(procedimientoId);
     }
 }
