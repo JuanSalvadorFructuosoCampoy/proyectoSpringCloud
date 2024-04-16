@@ -50,7 +50,6 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
         Optional<Procedimiento> o = repositorio.findById(id);
         if (o.isPresent()) {
             Procedimiento procedimiento = o.get();
-
                 List<Interviniente> intervinientes = cliente.obtenerIntervinientesPorProcedimiento(procedimiento.getId());
                 procedimiento.setIntervinientes(intervinientes);
             return Optional.of(procedimiento);
@@ -83,13 +82,15 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
     public Optional<Interviniente> aniadirInterviniente(Interviniente interviniente, Long procedimientoId) {
         Optional<Procedimiento> opt = repositorio.findById(procedimientoId);
         if(opt.isPresent()) {
-            Interviniente invervinienteDb = cliente.porId(interviniente.getId());
+            Interviniente intervinienteDb = cliente.porId(interviniente.getId());
             Procedimiento procedimiento = opt.get();
-            procedimiento.getIntervinientes().add(invervinienteDb);
+            procedimiento.getIntervinientes().add(intervinienteDb);
             procedimiento.setFechaModificacion(LocalDate.now());
             procedimiento.setUsuarioModificacion(repositorio.getUsuario());
+            interviniente.setProcedimientoId(procedimientoId);
             repositorio.save(procedimiento);
-            return Optional.of(invervinienteDb);
+            cliente.aniadirInterviniente(interviniente, procedimientoId);
+            return Optional.of(interviniente);
         }
         return Optional.empty();
     }

@@ -16,4 +16,7 @@ public interface IntervinienteClientRest {
 
     @GetMapping("/intervinientes-por-procedimiento/{id}")
     List<Interviniente> obtenerIntervinientesPorProcedimiento(@PathVariable Long id);
+
+    @PutMapping("/aniadir-interviniente/{procedimientoId}")
+    Interviniente aniadirInterviniente(@RequestBody Interviniente interviniente, @PathVariable Long procedimientoId);
 }

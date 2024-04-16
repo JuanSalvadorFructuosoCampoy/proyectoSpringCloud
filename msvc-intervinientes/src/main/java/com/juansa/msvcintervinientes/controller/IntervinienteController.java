@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,6 +73,21 @@ public class IntervinienteController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_URL);
     }
 
+    @PutMapping("/aniadir-interviniente/{procedimientoId}")
+    public ResponseEntity<Object> aniadirInterviniente(@Valid @RequestBody IntervinienteDTO intervinienteDTO, BindingResult result, @PathVariable Long procedimientoId){
+        if(result.hasErrors()){
+            return validar(result);
+        }
+        Optional<Interviniente> opt = servicio.porId(intervinienteDTO.getId());
+        if(opt.isPresent()) {
+            Interviniente interviniente = opt.get();
+            interviniente.setProcedimientoId(procedimientoId);
+            servicio.guardarEditar(interviniente);
+            return ResponseEntity.status(HttpStatus.CREATED).body(interviniente);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Interviniente> eliminar(@PathVariable Long id) {
         Optional<Interviniente> opt = servicio.porId(id);
@@ -98,5 +114,12 @@ public class IntervinienteController {
                 errores.put("error", "El campo " + err.getField() + " " + err.getDefaultMessage())
         );
         return ResponseEntity.badRequest().body(errores);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String>> manejarExcepcionDeJsonIncorrecto(HttpMessageNotReadableException e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "El JSON proporcionado es incorrecto: " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }

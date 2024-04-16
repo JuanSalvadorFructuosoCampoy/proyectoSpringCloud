@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ import java.util.*;
 public class ProcedimientoController {
     private ProcedimientoService servicio;
     private static final String ERROR_URL = "Error: URL de la solicitud incorrecta";
-
+    private static final String ERROR_MESSAGE = "error";
     @Autowired
     public ProcedimientoController(ProcedimientoService servicio) {
         this.servicio = servicio;
@@ -80,7 +81,6 @@ public class ProcedimientoController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_URL);
     }
 
-    //COMPROBAR ESTE MÉTODO
     @PutMapping("/aniadir-interviniente/{procedimientoId}")
     public ResponseEntity<Object> aniadirInterviniente(@RequestBody Interviniente interviniente, @PathVariable Long procedimientoId) {
     Optional<Interviniente> opt;
@@ -130,7 +130,7 @@ public class ProcedimientoController {
     private static ResponseEntity<Object> validar(BindingResult result) {
         Map<String, String> errores = new HashMap<>();
         result.getFieldErrors().forEach(err ->
-                errores.put("error", "El campo " + err.getField() + " " + err.getDefaultMessage())
+                errores.put(ERROR_MESSAGE, "El campo " + err.getField() + " " + err.getDefaultMessage())
         );
         return ResponseEntity.badRequest().body(errores);
     }
@@ -138,7 +138,14 @@ public class ProcedimientoController {
     @ExceptionHandler(NumeroDuplicadoException.class)
     public ResponseEntity<Map<String, String>> manejarExcepcion(NumeroDuplicadoException e) {
         Map<String, String> error = new HashMap<>();
-        error.put("error", e.getMessage());
+        error.put(ERROR_MESSAGE, e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String>> manejarExcepcionDeJsonIncorrecto(HttpMessageNotReadableException e) {
+        Map<String, String> error = new HashMap<>();
+        error.put(ERROR_MESSAGE, "El JSON proporcionado es incorrecto: " + e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
