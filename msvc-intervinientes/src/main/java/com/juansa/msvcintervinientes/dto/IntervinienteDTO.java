@@ -15,4 +15,6 @@ public class IntervinienteDTO {
 
     @NotBlank(message = "no puede quedar vacío ni con espacios en blanco")
     private String tipoIntervencion;
+
+    private Long procedimientoId;
 }

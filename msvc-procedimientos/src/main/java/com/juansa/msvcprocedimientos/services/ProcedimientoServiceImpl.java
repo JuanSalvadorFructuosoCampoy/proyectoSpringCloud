@@ -85,23 +85,22 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
     }
 
     @Override
-    public Optional<Interviniente> aniadirInterviniente(Interviniente interviniente, Long procedimientoId) {
+    public Optional<Interviniente> crearInterviniente(Interviniente interviniente, Long procedimientoId) {
         Optional<Procedimiento> opt = repositorio.findById(procedimientoId);
         if(opt.isPresent()) {
             Procedimiento procedimiento = opt.get();
-            Optional<Interviniente> intervinienteDb = cliente.porId(interviniente.getId());
-            if(intervinienteDb.isPresent()) {
-                procedimiento.getIntervinientes().add(intervinienteDb.get());
-                procedimiento.setFechaModificacion(LocalDate.now());
-                procedimiento.setUsuarioModificacion(repositorio.getUsuario());
-                interviniente.setProcedimientoId(procedimientoId);
-                repositorio.save(procedimiento);
-                cliente.aniadirInterviniente(interviniente, procedimientoId);
-                return Optional.of(interviniente);
-            }
+            Interviniente interNuevo = cliente.crear(interviniente);
+            interNuevo.setProcedimientoId(procedimientoId);
+            procedimiento.getIntervinientes().add(interNuevo);
+            procedimiento.setFechaCreacion(LocalDate.now());
+            procedimiento.setUsuarioCreacion(repositorio.getUsuario());
+            repositorio.save(procedimiento);
+            cliente.crear(interNuevo);
+            return Optional.of(interNuevo);
         }
         return Optional.empty();
     }
+
 
     @Override
     @Transactional

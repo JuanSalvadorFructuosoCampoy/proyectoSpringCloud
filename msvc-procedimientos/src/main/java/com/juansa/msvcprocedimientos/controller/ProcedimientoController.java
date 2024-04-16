@@ -5,6 +5,7 @@ import com.juansa.msvcprocedimientos.models.Interviniente;
 import com.juansa.msvcprocedimientos.models.entity.Procedimiento;
 import com.juansa.msvcprocedimientos.exception.NumeroDuplicadoException;
 import com.juansa.msvcprocedimientos.services.ProcedimientoService;
+import feign.FeignException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -79,23 +80,6 @@ public class ProcedimientoController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_URL);
     }
 
-//    @PutMapping("/aniadir-interviniente/{procedimientoId}")
-//    public ResponseEntity<Object> aniadirInterviniente(@RequestBody Interviniente interviniente, @PathVariable Long procedimientoId) {
-//    Optional<Interviniente> opt;
-//    Interviniente intervinienteDb = opt.get();
-//    try{
-//        opt = servicio.aniadirInterviniente(interviniente, procedimientoId);
-//    }catch(FeignException e) {
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                .body(Collections.singletonMap("mensaje", "No existe el interviniente, el id del procedimiento es incorrecto o error en la comunicación: " + e.getMessage()));
-//
-//    }
-//    if(opt.isPresent()) {
-//        return ResponseEntity.status(HttpStatus.CREATED).body(opt.get());
-//    }
-//    return ResponseEntity.notFound().build();
-//}
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Procedimiento> eliminar(@PathVariable Long id) {
         Optional<Procedimiento> opt = servicio.porId(id);
@@ -111,7 +95,7 @@ public class ProcedimientoController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_URL);
     }
 
-    @PutMapping("/asignar-interviniente/{procedimientoId}")
+    @PutMapping("/asignar-int/{procedimientoId}")
     public ResponseEntity<Object> asignarInterviniente(@RequestParam Long interId, @PathVariable Long procedimientoId) {
         Optional<Interviniente> opt = servicio.obtenerInterviniente(interId);
         if(opt.isEmpty()) {
@@ -124,6 +108,22 @@ public class ProcedimientoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Collections.singletonMap("mensaje","No existe el interviniente por el id o error en la comunicación: " +
                             e.getMessage()));
+        }
+        if(opt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(opt.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/crear-int/{procedimientoId}")
+    public ResponseEntity<Object> crearInterviniente(@RequestBody Interviniente interviniente, @PathVariable Long procedimientoId) {
+        Optional<Interviniente> opt;
+        try{
+            opt = servicio.crearInterviniente(interviniente, procedimientoId);
+        }catch(FeignException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("mensaje","No se pudo crear el interviniente o error en la comunicación: "
+                            + e.getMessage()));
         }
         if(opt.isPresent()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(opt.get());

@@ -73,8 +73,8 @@ public class IntervinienteController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_URL);
     }
 
-    @PutMapping("/aniadir-interviniente/{procedimientoId}")
-    public ResponseEntity<Object> aniadirInterviniente(@Valid @RequestBody IntervinienteDTO intervinienteDTO, BindingResult result, @PathVariable Long procedimientoId){
+    @PutMapping("/asignar-int/{procedimientoId}")
+    public ResponseEntity<Object> asignarInterviniente(@Valid @RequestBody IntervinienteDTO intervinienteDTO, BindingResult result, @PathVariable Long procedimientoId){
         if(result.hasErrors()){
             return validar(result);
         }
