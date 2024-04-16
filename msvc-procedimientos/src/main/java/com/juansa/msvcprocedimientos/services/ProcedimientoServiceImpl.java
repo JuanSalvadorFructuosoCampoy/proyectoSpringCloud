@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -133,8 +134,8 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
             Interviniente interNuevo = cliente.crear(interviniente);
             interNuevo.setProcedimientoId(procedimientoId);
             procedimiento.getIntervinientes().add(interNuevo);
-            procedimiento.setFechaCreacion(LocalDate.now());
-            procedimiento.setUsuarioCreacion(repositorio.getUsuario());
+            procedimiento.setFechaModificacion(LocalDate.now());
+            procedimiento.setUsuarioModificacion(repositorio.getUsuario());
             repositorio.save(procedimiento);
             cliente.crear(interNuevo);
             return Optional.of(interNuevo);
@@ -150,6 +151,9 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
             if(intervinienteDb.isEmpty()) {
                 return Optional.empty();
             }
+            if(!Objects.equals(interviniente.getProcedimientoId(), procedimientoId)){
+                return Optional.empty();
+            }
             Procedimiento procedimiento = opt.get();
             procedimiento.getIntervinientes().remove(intervinienteDb.get());
             procedimiento.setFechaModificacion(LocalDate.now());
@@ -161,5 +165,4 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
         }
         return Optional.empty();
     }
-
 }
