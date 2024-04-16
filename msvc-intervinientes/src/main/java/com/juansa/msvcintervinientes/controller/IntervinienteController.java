@@ -34,7 +34,7 @@ public class IntervinienteController {
     @GetMapping("/{id}")
     public ResponseEntity<Interviniente> porId(@PathVariable Long id){
         Optional<Interviniente> opt = servicio.porId(id);
-        return opt.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.status(HttpStatus.OK).body(opt.orElse(null));
     }
 
     @PostMapping
@@ -114,6 +114,11 @@ public class IntervinienteController {
                 errores.put("error", "El campo " + err.getField() + " " + err.getDefaultMessage())
         );
         return ResponseEntity.badRequest().body(errores);
+    }
+
+    @PutMapping("/actualizacion")
+    Interviniente actualizacion(@RequestBody Interviniente interviniente) {
+        return servicio.guardarEditar(interviniente);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

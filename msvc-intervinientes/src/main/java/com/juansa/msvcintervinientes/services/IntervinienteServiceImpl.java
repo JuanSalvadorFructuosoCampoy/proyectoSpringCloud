@@ -62,6 +62,9 @@ public class IntervinienteServiceImpl implements IntervinienteService{
         Interviniente intervinienteDb = optionalInterviniente.get();
         intervinienteDb.setFechaModificacion(LocalDate.now());
         intervinienteDb.setUsuarioModificacion(repositorio.getUsuario());
+        intervinienteDb.setNombre(interviniente.getNombre());
+        intervinienteDb.setTipoIntervencion(interviniente.getTipoIntervencion());
+        intervinienteDb.setProcedimientoId(interviniente.getProcedimientoId());
         return repositorio.save(intervinienteDb);
     }
 

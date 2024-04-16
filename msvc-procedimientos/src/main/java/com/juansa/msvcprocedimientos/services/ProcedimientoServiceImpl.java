@@ -62,35 +62,43 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
         return repositorio.getProcedimientoPorNumero(numero);
     }
 
+
     @Override
     @Transactional
     public Optional<Interviniente> asignarInterviniente(Interviniente interviniente, Long procedimientoId) {
         Optional<Procedimiento> opt = repositorio.findById(procedimientoId);
         if(opt.isPresent()) {
-            Interviniente intervinienteDb = cliente.porId(interviniente.getId());
-            Procedimiento procedimiento = opt.get();
-            procedimiento.getIntervinientes().add(intervinienteDb);
-            procedimiento.setFechaModificacion(LocalDate.now());
-            procedimiento.setUsuarioModificacion(repositorio.getUsuario());
-            repositorio.save(procedimiento);
-            return Optional.of(intervinienteDb);
-        }
-        return Optional.empty();
+                Optional<Interviniente> intervinienteDb = cliente.porId(interviniente.getId());
+                if (intervinienteDb.isEmpty()) {
+                    return Optional.empty();
+                }
+                Procedimiento procedimiento = opt.get();
+                procedimiento.getIntervinientes().add(intervinienteDb.get());
+                procedimiento.setFechaModificacion(LocalDate.now());
+                procedimiento.setUsuarioModificacion(repositorio.getUsuario());
+                intervinienteDb.get().setProcedimientoId(procedimientoId);
+                repositorio.save(procedimiento);
+                cliente.actualizacion(intervinienteDb.get());
+                return Optional.of(intervinienteDb.get());
+       }
+       return Optional.empty();
     }
 
     @Override
     public Optional<Interviniente> aniadirInterviniente(Interviniente interviniente, Long procedimientoId) {
         Optional<Procedimiento> opt = repositorio.findById(procedimientoId);
         if(opt.isPresent()) {
-            Interviniente intervinienteDb = cliente.porId(interviniente.getId());
             Procedimiento procedimiento = opt.get();
-            procedimiento.getIntervinientes().add(intervinienteDb);
-            procedimiento.setFechaModificacion(LocalDate.now());
-            procedimiento.setUsuarioModificacion(repositorio.getUsuario());
-            interviniente.setProcedimientoId(procedimientoId);
-            repositorio.save(procedimiento);
-            cliente.aniadirInterviniente(interviniente, procedimientoId);
-            return Optional.of(interviniente);
+            Optional<Interviniente> intervinienteDb = cliente.porId(interviniente.getId());
+            if(intervinienteDb.isPresent()) {
+                procedimiento.getIntervinientes().add(intervinienteDb.get());
+                procedimiento.setFechaModificacion(LocalDate.now());
+                procedimiento.setUsuarioModificacion(repositorio.getUsuario());
+                interviniente.setProcedimientoId(procedimientoId);
+                repositorio.save(procedimiento);
+                cliente.aniadirInterviniente(interviniente, procedimientoId);
+                return Optional.of(interviniente);
+            }
         }
         return Optional.empty();
     }
@@ -128,5 +136,10 @@ public class ProcedimientoServiceImpl implements ProcedimientoService{
     @Override
     public void eliminar(Long id) {
         repositorio.deleteById(id);
+    }
+
+    @Override
+    public Optional<Interviniente> obtenerInterviniente(Long id) {
+        return cliente.porId(id);
     }
 }

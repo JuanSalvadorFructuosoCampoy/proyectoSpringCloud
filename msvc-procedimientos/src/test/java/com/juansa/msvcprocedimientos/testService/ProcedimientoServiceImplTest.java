@@ -1,5 +1,6 @@
 package com.juansa.msvcprocedimientos.testService;
 
+import com.juansa.msvcprocedimientos.clients.IntervinienteClientRest;
 import com.juansa.msvcprocedimientos.dto.ProcedimientoDTO;
 import com.juansa.msvcprocedimientos.models.entity.Procedimiento;
 import com.juansa.msvcprocedimientos.exception.NumeroDuplicadoException;
@@ -29,10 +30,12 @@ class ProcedimientoServiceImplTest {
 
     private ProcedimientoServiceImpl servicio;
 
+    private IntervinienteClientRest cliente;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        servicio = new ProcedimientoServiceImpl(repositorio, new ModelMapper());
+        servicio = new ProcedimientoServiceImpl(repositorio, new ModelMapper(), cliente);
     }
 
     @Test
