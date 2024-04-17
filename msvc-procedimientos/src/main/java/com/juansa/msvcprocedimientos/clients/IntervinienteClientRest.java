@@ -18,9 +18,6 @@ public interface IntervinienteClientRest {
     @GetMapping("/intervinientes-por-procedimiento/{id}")
     List<Interviniente> obtenerIntervinientesPorProcedimiento(@PathVariable Long id);
 
-    @PutMapping("/asignar-int/{procedimientoId}")
-    Interviniente asignarInterviniente(@RequestBody Interviniente interviniente, @PathVariable Long procedimientoId);
-
     @PutMapping("/actualizacion")
     Interviniente actualizacion(Interviniente interviniente);
 }
