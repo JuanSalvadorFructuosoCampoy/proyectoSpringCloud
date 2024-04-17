@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class IntervinienteNoEncontradoExceptionTest {
+class IntervinienteNoEncontradoExceptionTest {
 
     @Mock
     private IntervinienteService intervienienteService;
