@@ -3,10 +3,13 @@ package com.juansa.msvcprocedimientos.testDTO;
 import com.juansa.msvcprocedimientos.dto.ProcedimientoDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ProcedimientoDTOTest {
+
+    @Mock
     private ProcedimientoDTO procedimientoDTO;
 
     @BeforeEach

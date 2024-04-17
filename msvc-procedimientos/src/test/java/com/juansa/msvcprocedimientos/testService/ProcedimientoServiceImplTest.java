@@ -29,14 +29,15 @@ class ProcedimientoServiceImplTest {
     @Mock
     private ProcedimientoRepository repositorio;
 
+    @Mock
     private ProcedimientoServiceImpl servicio;
 
+    @Mock
     private IntervinienteClientRest cliente;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        cliente = mock(IntervinienteClientRest.class);
         servicio = new ProcedimientoServiceImpl(repositorio, new ModelMapper(), cliente);
     }
 

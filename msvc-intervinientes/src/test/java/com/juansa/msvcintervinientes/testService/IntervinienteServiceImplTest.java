@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,9 +25,10 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 class IntervinienteServiceImplTest {
 
-    @Mock
+    @MockBean
     private IntervinienteRepository repositorio;
 
+    @Mock
     private IntervinienteServiceImpl servicio;
 
     @BeforeEach

@@ -42,6 +42,7 @@ class ProcedimientoControllerTest {
     @MockBean
     private ProcedimientoService procedimientoService;
 
+    @MockBean
     private Procedimiento procedimiento;
 
     @BeforeEach

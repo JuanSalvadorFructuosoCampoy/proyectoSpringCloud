@@ -3,10 +3,13 @@ package com.juansa.msvcintervinientes.testDTO;
 import com.juansa.msvcintervinientes.dto.IntervinienteDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class IntervinienteDTOTest {
+
+    @Mock
     private IntervinienteDTO intervienienteDTO;
 
     @BeforeEach

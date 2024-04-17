@@ -36,6 +36,7 @@ class IntervinienteControllerTest {
     @MockBean
     private IntervinienteService intervinienteService;
 
+    @MockBean
     private Interviniente interviniente;
 
     @BeforeEach
