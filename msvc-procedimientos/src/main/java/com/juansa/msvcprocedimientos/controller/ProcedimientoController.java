@@ -154,7 +154,7 @@ public class ProcedimientoController {
     private static ResponseEntity<Object> validar(BindingResult result) {
         Map<String, String> errores = new HashMap<>();
         result.getFieldErrors().forEach(err ->
-                errores.put(ERROR_MESSAGE, "El campo " + err.getField() + " " + err.getDefaultMessage())
+                errores.put(err.getField(), err.getDefaultMessage())
         );
         return ResponseEntity.badRequest().body(errores);
     }
