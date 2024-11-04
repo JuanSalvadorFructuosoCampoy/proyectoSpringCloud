@@ -3,8 +3,8 @@ ENLACE AL REPOSITORIO DEL PROYECTO: https://github.com/JuanSalvadorFructuosoCamp
 -----------------------------------------------------------------------------
 
 ACCESO A LAS BASES DE DATOS H2:
-Procedimientos: http://localhost:8081/h2-console
-Intervinientes: http://localhost:8082/h2-console
+Procedimientos: http://localhost:8001/h2-console
+Intervinientes: http://localhost:8002/h2-console
 
 Credenciales de acceso en ambas bases de datos:
 
